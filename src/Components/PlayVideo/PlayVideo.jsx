@@ -17,7 +17,7 @@ const PlayVideo = () => {
             <p>1525 views &bull; 2 days ago</p>
             <div>
                 <span><img src={like} alt="" /> 125 </span>
-                <span><img src={dislike} alt="" /> 5 </span>
+                <span><img src={dislike} alt="" />  </span>
                 <span><img src={share} alt="" /> Share </span>
                 <span><img src={save} alt="" /> Save </span>
             </div>
