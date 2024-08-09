@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './Recommend.css'
 import { API_KEY, value_converter } from '../../data';
+import { Link } from 'react-router-dom';
 
 const Recommend = ({ categoryId }) => {
 
@@ -22,14 +23,14 @@ const Recommend = ({ categoryId }) => {
         <div className='recommended'>
             {apiData.map((item, index) => {
                 return (
-                    <div key={index} className="side-video-list">
+                    <Link to={`/video/${item.snippet.categoryId}/${item.id}`} key={index} className="side-video-list">
                         <img src={item.snippet.thumbnails.medium.url} alt="" />
                         <div className="vid-info">
                             <h4>{item.snippet.title}</h4>
                             <p>{item.snippet.channelTitle}</p>
                             <p>{value_converter(item.statistics.viewCount)} Views</p>
                         </div>
-                    </div>
+                    </Link>
                 )
             })}
 
