@@ -14,6 +14,7 @@ const PlayVideo = ({ videoId }) => {
 
     const [apiData, setApiData] = useState(null);
     const [channelData, setChannelData] = useState(null);
+    const [commentData, setCommentData] = useState([]);
 
 
     const fetchVideoData = async () => {
@@ -30,6 +31,12 @@ const PlayVideo = ({ videoId }) => {
         await fetch(channelData_url)
             .then(res => res.json())
             .then(data => setChannelData(data.items[0]))
+
+        // fetching comment data
+        const comment_url = `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&maxResults=60&videoId=${videoId}&key=${API_KEY}`
+        await fetch(comment_url)
+            .then(res => res.json())
+            .then(data => setCommentData(data.items))
     }
 
     useEffect(() => {
@@ -57,10 +64,10 @@ const PlayVideo = ({ videoId }) => {
 
             <hr />
             <div className="publisher">
-                <img src={channelData?channelData.snippet.thumbnails.default.url:jack} alt="" />
+                <img src={channelData ? channelData.snippet.thumbnails.default.url : jack} alt="" />
                 <div>
                     <p>{apiData ? apiData.snippet.channelTitle : ""}</p>
-                    <span>{channelData?value_converter(channelData.statistics.subscriberCount):""} Subscribers</span>
+                    <span>{channelData ? value_converter(channelData.statistics.subscriberCount) : ""} Subscribers</span>
                 </div>
                 <button>Subscribe</button>
             </div>
@@ -70,109 +77,27 @@ const PlayVideo = ({ videoId }) => {
                 <p>{apiData ? apiData.snippet.description.slice(0, 250) : "Desciption Here"}</p>
                 <hr />
                 <h4>{apiData ? value_converter(apiData.statistics.commentCount) : ""} Comments</h4>
-                <div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Sushil Shrestha <span>20 hours ago</span> </h3>
-                        <p>Nice Video! Keep it up</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>25 </span>
-                            <img src={dislike} alt="" />
-                        </div>
-                    </div>
-                </div>
-                <div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Sushil Shrestha <span>20 hours ago</span> </h3>
-                        <p>Nice Video! Keep it up</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>25 </span>
-                            <img src={dislike} alt="" />
-                        </div>
-                    </div>
-                </div><div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Sushil Shrestha <span>20 hours ago</span> </h3>
-                        <p>Nice Video! Keep it up</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>25 </span>
-                            <img src={dislike} alt="" />
-                        </div>
-                    </div>
-                </div><div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Sushil Shrestha <span>20 hours ago</span> </h3>
-                        <p>Nice Video! Keep it up</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>25 </span>
-                            <img src={dislike} alt="" />
-                        </div>
-                    </div>
-                </div><div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Sushil Shrestha <span>20 hours ago</span> </h3>
-                        <p>Nice Video! Keep it up</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>25 </span>
-                            <img src={dislike} alt="" />
-                        </div>
-                    </div>
-                </div><div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Sushil Shrestha <span>20 hours ago</span> </h3>
-                        <p>Nice Video! Keep it up</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>25 </span>
-                            <img src={dislike} alt="" />
-                        </div>
-                    </div>
-                </div><div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Sushil Shrestha <span>20 hours ago</span> </h3>
-                        <p>Nice Video! Keep it up</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>25 </span>
-                            <img src={dislike} alt="" />
-                        </div>
-                    </div>
-                </div><div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Sushil Shrestha <span>20 hours ago</span> </h3>
-                        <p>Nice Video! Keep it up</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>25 </span>
-                            <img src={dislike} alt="" />
-                        </div>
-                    </div>
-                </div><div className="comment">
-                    <img src={user_profile} alt="" />
-                    <div>
-                        <h3>Sushil Shrestha <span>20 hours ago</span> </h3>
-                        <p>Nice Video! Keep it up</p>
-                        <div className="comment-action">
-                            <img src={like} alt="" />
-                            <span>25 </span>
-                            <img src={dislike} alt="" />
-                        </div>
-                    </div>
-                </div>
-            </div>
 
+
+                {commentData.map((item, index) => {
+                    return (
+
+                        <div key={index} className="comment">
+                            <img src={item.snippet.topLevelComment.snippet.authorProfileImageUrl} alt="" />
+                            <div>
+                                <h3>{item.snippet.topLevelComment.snippet.authorDisplayName} <span>20 hours ago</span> </h3>
+                                <p>{item.snippet.topLevelComment.snippet.textDisplay}</p>
+                                <div className="comment-action">
+                                    <img src={like} alt="" />
+                                    <span>{value_converter(item.snippet.topLevelComment.snippet.likeCount)} </span>
+                                    <img src={dislike} alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })}
+
+            </div>
         </div>
     )
 }
